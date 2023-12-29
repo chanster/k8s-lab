@@ -1,0 +1,20 @@
+#cloud-config
+growpart:
+  mode: auto
+  devices: ["/"]
+  ignore_growroot_disabled: false
+
+hostname: ${hostname}
+fqdn: ${fqdn}
+
+users:
+  - name: k3s
+    system: false
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/ash
+    ssh_authorized_keys:
+      - ${public_key}
+
+packages:
+  - name: k3s
+    package_reboot_if_required: true

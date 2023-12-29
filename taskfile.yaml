@@ -1,0 +1,43 @@
+---
+version: 3
+
+tasks:
+  pkr:alpine:
+    cmds:
+      - cmd: packer build packer/alpine
+  pkr:clean:
+    cmds:
+      - cmd: if [[ -d './bin/images' ]]; then rm -r ./bin/images; fi
+  tf:init:
+    dir: ./terraform
+    cmds:
+      - cmd: terraform init
+  tf:fmt:
+    dir: ./terraform
+    cmds:
+      - cmd: terraform fmt --recursive
+  tf:show:
+    dir: ./terraform
+    cmds:
+      - task: tf:init
+      - cmd: terraform show
+  tf:plan:
+    dir: ./terraform
+    cmds:
+      - task: tf:init
+      - cmd: terraform plan
+  tf:apply:
+    dir: ./terraform
+    cmds:
+      - task: tf:init
+      - cmd: terraform apply --auto-approve
+  tf:destroy:
+    dir: ./terraform
+    cmds:
+      - task: tf:init
+      - cmd: terraform destroy --auto-approve
+  run:
+    cmds:
+      - task: pkr:clean
+      - task: pkr:alpine
+      - task: tf:apply

@@ -1,0 +1,26 @@
+#!/bin/bash
+# Executed when a network is started or stopped or an interface is plugged/unplugged to/from the network. See:
+# Hooks for specific system management
+# https://www.libvirt.org/hooks.html
+
+# After the network is started, up & running, the script is called as:
+# /etc/libvirt/hooks/network network_name started begin -
+if [[ "$2" == "started" ]]; then
+    DATA=$(/bin/cat) # collect network xml from stdin
+    NETWORK_NAME=$1
+    # get bridge interface
+    BRIDGE=$(echo ${DATA} | grep -Pio "bridge[ ]*name='\K[^']*")
+    # get network CIDR
+    NETWORK_CIDR=$(echo ${DATA} | grep -Pio "ip family.*address='\K[^']*")
+
+    # echo ${DATA} > /tmp/$1
+    # echo ${BRIDGE} >> /tmp/$1
+    # echo ${NETWORK_CIDR} >> /tmp/$1
+
+    if ! [[ -z ${BRIDGE} ]]; then
+        resolvectl domain ${BRIDGE} ~${NETWORK_NAME} # add domain
+        if ! [[ -z ${NETWORK_CIDR} ]]; then
+            resolvectl dns ${BRIDGE} ${NETWORK_CIDR} # add dns
+        fi
+    fi
+fi
