@@ -15,12 +15,3 @@ resource "libvirt_network" "network" {
     local_only = true
   }
 }
-
-# resource "libvirt_network" "k3s" {
-#   name      = var.k3s_network.domain
-#   mode      = "bridge"
-#   bridge    = "virbr1"
-#   autostart = true
-
-#   depends_on = [ libvirt_network.bridge ]
-# }

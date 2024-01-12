@@ -11,10 +11,6 @@ variable "network_domain" {
   type = string
 }
 
-variable "bridge" {
-  type = string
-}
-
 variable "name" {
   type        = string
   description = "name of virtual machine"
