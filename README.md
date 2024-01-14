@@ -1,15 +1,37 @@
-## Requirements
+# K8s Lab
 
+This automates the deployment of a k8s cluster locally on your own machine.
+
+## Requirements
 
 - `libvirt`
 - `mkisofs`
-- `terraform` >= `1.6.5`
-- `packer` >= `1.9.4`
-- `python` >= `3.11`
+- `task` ([taskfile](https://taskfile.dev/))
+- `mise` ([mise-en-place](https://mise.jdx.dev/))
+  - `terraform` >= `1.6.6`
+  - `packer` >= `1.9.4`
+  - `python` >= `3.11`
 
 ### Installing Requirements
 
-#### `qemu/kvm` permissions
+#### QEMU/KVM
+
+```shell
+sudo apt update \
+&& sudo apt install -y \
+    qemu-kvm virt-manager libvirt-daemon-system virtinst libvirt-clients bridge-utils libnss-libvirt 
+```
+
+Add yourself to the `libvirt` group
+```shell
+sudo usermod -aG libvirt $USER
+```
+
+logout and back in to apply the group to your account. You can `newgrp libvirt` to add the group within your current terminal session but better to logout to apply the group to your whole session so the `virt-manager` will work from the GUI too.
+
+The `providers.tf` assumes qemu/kvm is installed locally and your user has access to the `qemu://` socket.
+
+##### `qemu/kvm` permissions
 
 AppArmor has policies that block `kvm` from accessing volumes created by `qemu`. Add `/var/lib/libvirt/images/**.qcow2 rwk,` within the profile block.
 
@@ -25,12 +47,11 @@ profile LIBVIRT_TEMPLATE flags=(attach_disconnected) {
   #include <abstractions/libvirt-qemu>
   /var/lib/libvirt/images/**.qcow2 rwk,
 }
-
 ```
 
 This allows `rw` (read/write) and `k` (lock) access to `.qcow2` files in `/var/lib/libvirt/images/`.
 
-#### Name Resolution
+##### Name Resolution
 
 With `systemd-resolved`, `libvirt` cannot update the network configuration to identify the new domain and network to the interface. We want to add a hook to the `libvirt` network process.
 
@@ -40,6 +61,8 @@ Copy the contents of `scripts/network` in this repository to `/etc/libvirt/hooks
 
 | task | description |
 | ---:|:--- |
+| `mise:init` | use mise to install tooling |
+| `py:init` | creates the virtual python environment |
 | `pkr:alpine` | create the Alpine Cloud-init image |
 | `tf:plan` | Show the current terraform changes |
 | `tf:apply` | Apply the current terraform changes |
