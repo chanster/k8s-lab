@@ -69,14 +69,18 @@ Copy the contents of `scripts/network` in this repository to `/etc/libvirt/hooks
 
 ## Troubleshooting
 
-**Issue:** `clout-init`` fails to mount `/dev/sr0`
+**Issue:** `clout-init` fails to mount `/dev/sr0`
+
 **Resolution:** add `isofs` to `/etc/modules-loud.d/isofs.conf`
+
 **Reason:** `clount-init` runs `mount -o ro -t auto /dev/sr0 ...`. If file system `iso9660` is not compiled with the kernel, it will not load until first use. `mount` reads `/proc/filesystem` with using the `auto` type. If `iso9660` is not loaded, it will fail to detect the filesystem.
 
 ---
 **Issue:** Gust VM not reachable from host by FQDN
+
 **Resolution:** Validate you have the `scripts/network` contents added to `/etc/libvirt/hooks/network`
 
 ---
 **Issue:** bridge network removed from virt-manager but not from OS
+
 **Resolution:** `sudo ip link delete [interface]`
