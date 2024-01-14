@@ -1,3 +1,6 @@
+// This prepares the alpine image for cloud-init
+// documentation: https://gitlab.alpinelinux.org/alpine/aports/-/blob/master/community/cloud-init/README.Alpine
+
 data "http" "checksum" {
   // data sources currently cannot use locals: https://github.com/hashicorp/packer/issues/11011
   url = "${var.base_url}/v${join(".", slice(split(".", var.version), 0, 2))}/${var.repository}/${var.architecture}/alpine-virt-${var.version}-${var.architecture}.iso.sha256"
@@ -24,6 +27,8 @@ locals {
     "lvm2", "device-mapper",
     "sudo", "doas",
     "eudev",
+    "openssh-server-pam",
+    "python3",
   ]
 
   services = [
@@ -88,7 +93,7 @@ source "qemu" "alpine" {
     ["${join("<enter><wait1>", local.services)}<enter><wait1>", "enable services"],
     ["echo 'datasource_list: [ NoCloud ]' > /etc/cloud/cloud.cfg.d/99_nocloud.cfg<enter><wait1>", "set cloud init datasources"],
     ["echo 'isofs' > /etc/modules-load.d/isofs.conf<enter><wait1>", "load iso9660 filesystem to read cloud-init cdrom"], # without this, mount -t auto /dev/sr0 fails
-    // ["echo 'RESOLV_CONF=\"no\"' >> /etc/udhcpd.conf<enter><wait1>", "disable overwriting of resolve.conf by udhcpd"],
+    ["echo 'UsePAM yes' > /etc/ssh/sshd_config", "enable PAM for SSHd"],
     ["poweroff<enter>", "shutdown"]
   ]
   communicator = "none"
