@@ -6,11 +6,12 @@ This automates the deployment of a k8s cluster locally on your own machine.
 
 - `libvirt`
 - `mkisofs`
-- `task` ([taskfile](https://taskfile.dev/))
 - `mise` ([mise-en-place](https://mise.jdx.dev/))
+  - `task` ([taskfile](https://taskfile.dev/))
   - `terraform` >= `1.6.6`
   - `packer` >= `1.9.4`
   - `python` >= `3.11`
+  - `poetry` >= `1.7`
 
 ### Installing Requirements
 
@@ -61,7 +62,6 @@ Copy the contents of `scripts/network` in this repository to `/etc/libvirt/hooks
 
 | task | description |
 | ---:|:--- |
-| `mise:init` | use mise to install tooling |
 | `py:init` | creates the virtual python environment |
 | `pkr:alpine` | create the Alpine Cloud-init image |
 | `tf:plan` | Show the current terraform changes |
