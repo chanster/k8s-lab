@@ -33,7 +33,6 @@ locals {
 
   services = [
     "setup-cloud-init",
-    "rc-update add cloud-init-hotplugd default",
     "rc-update add qemu-guest-agent default",
     "rc-update add chronyd default",
   ]
@@ -84,16 +83,16 @@ source "qemu" "alpine" {
     ["<enter><wait1>", "setup ssh server, default openssh"],
     ["<enter><wait1>", "allow ssh root login, deafault prohibit password"],
     ["<enter><wait1>", "ssh root key, deafault prohibit password"],
-    ["vda<enter><wait1>sys<enter><wait15>y<enter><wait30>", "setup disk, vda"],
+    ["vda<enter><wait1>sys<enter><wait60>y<enter><wait60>", "setup disk, vda"],
     ["reboot<enter><wait20>", "restart and boot into base image"],
     ["root<enter><wait1>${var.root_password}<enter><wait5>", "log into machine"],
     ["sed -i '/community/s/^#//' /etc/apk/repositories<enter><wait1>", "enable community repo"],
     ["apk upgrade<enter><wait30>", "upgrade packages"],
-    ["apk add ${join(" ", local.packages)}<enter><wait60>", "install packages"],
+    ["apk add ${join(" ", local.packages)}<enter><wait180>", "install packages"],
     ["${join("<enter><wait1>", local.services)}<enter><wait1>", "enable services"],
     ["echo 'datasource_list: [ NoCloud ]' > /etc/cloud/cloud.cfg.d/99_nocloud.cfg<enter><wait1>", "set cloud init datasources"],
     ["echo 'isofs' > /etc/modules-load.d/isofs.conf<enter><wait1>", "load iso9660 filesystem to read cloud-init cdrom"], # without this, mount -t auto /dev/sr0 fails
-    ["echo 'UsePAM yes' > /etc/ssh/sshd_config", "enable PAM for SSHd"],
+    ["echo 'UsePAM yes' > /etc/ssh/sshd_config<enter><wait1>", "enable PAM for SSHd"],
     ["poweroff<enter>", "shutdown"]
   ]
   communicator = "none"
