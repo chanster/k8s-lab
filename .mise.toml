@@ -1,0 +1,4 @@
+[tools]
+terraform = "1.6.6"
+packer = "1.9.4"
+python = "3.12"
