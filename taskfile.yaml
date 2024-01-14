@@ -14,42 +14,42 @@ tasks:
       - poetry run ansible hosts -m ping -i inventory.ini --user k3s
   pkr:alpine:
     cmds:
-      - cmd: packer build packer/alpine
+      - packer build packer/alpine
   pkr:clean:
     cmds:
-      - cmd: if [[ -d './bin/images' ]]; then rm -r ./bin/images; fi
+      - if [[ -d './bin/images' ]]; then rm -r ./bin/images; fi
   tf:init:
     dir: ./terraform
     cmds:
-      - cmd: terraform init
+      - terraform init
   tf:fmt:
     dir: ./terraform
     cmds:
-      - cmd: terraform fmt --recursive
+      - terraform fmt --recursive
   tf:show:
     aliases: [ tf:s, tfs ]
     dir: ./terraform
     cmds:
       - task: tf:init
-      - cmd: terraform show
+      - terraform show
   tf:plan:
     aliases: [ tf:p, tfp ]
     dir: ./terraform
     cmds:
       - task: tf:init
-      - cmd: terraform plan
+      - terraform plan
   tf:apply:
     aliases: [ tf:a, tfa ]
     dir: ./terraform
     cmds:
       - task: tf:init
-      - cmd: terraform apply --auto-approve
+      - terraform apply --auto-approve
   tf:destroy:
     aliases: [ tf:d, tfd ]
     dir: ./terraform
     cmds:
       - task: tf:init
-      - cmd: terraform destroy --auto-approve
+      - terraform destroy --auto-approve
   run:
     cmds:
       - task: mise:init
