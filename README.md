@@ -58,6 +58,22 @@ With `systemd-resolved`, `libvirt` cannot update the network configuration to id
 
 Copy the contents of `scripts/network` in this repository to `/etc/libvirt/hooks/network`. If the file does not exist, you can create it. If it does exist, you can append the contents to the file.
 
+## Terraform
+
+Create a `local.auto.tfvars` in the `terraform` directory. You will need to assign your public ssh key value to `shh_key`. YOu may override other variables as you see fit.
+
+```hcl
+ssh_key = "[cipher] [key_string] [comment]"
+```
+
+| Variable | Type | Required | Description | Default |
+| ---:|:---:|:---:|:--- |:--- |
+| `ssh_key` | `sring` | ✓ | Public SSH key for Ansible and Kubernetes management |  |
+| `hosts` | `number` | ✓ | Number of kubernetes machines to deploy. Best to use an odd number. | `3` |
+| `name` | `string` | ✓ | hostname prefix. | `k3s` |
+| `network_cidr` | `string` | ✓ | Network to create for the cluster | `10.10.10.0/24` |
+| `network_domain` | `string` | ✓ | Top level domain to use for network | `k3s-lab` |
+
 ## Tasks
 
 | task | description |
