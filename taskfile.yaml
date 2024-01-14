@@ -1,13 +1,17 @@
 ---
 version: 3
 
+vars:
+  VENV_PYTHON: .venv/bin/python
+
 tasks:
-  mise:init:
-    cmds:
-      - cmd: mise install
   py:init:
     cmds:
-      - cmd: python3 -m venv venv
+      - poetry install --no-root
+  ansible:ping:
+    dir: ansible
+    cmds:
+      - poetry run ansible hosts -m ping -i inventory.ini --user k3s
   pkr:alpine:
     cmds:
       - cmd: packer build packer/alpine
