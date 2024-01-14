@@ -22,3 +22,14 @@ module "machine" {
     }
   )
 }
+
+resource "local_file" "ansible_inventory" {
+  filename = "../ansible/inventory.ini"
+  file_permission = "644"
+  content = <<EOT
+[hosts]
+%{ for num in range(var.hosts) ~}
+${var.name}w${format("%02d", num + 1)}.${var.network_domain}
+%{endfor ~}
+EOT
+}
