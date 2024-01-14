@@ -2,6 +2,12 @@
 version: 3
 
 tasks:
+  mise:init:
+    cmds:
+      - cmd: mise install
+  py:init:
+    cmds:
+      - cmd: python3 -m venv venv
   pkr:alpine:
     cmds:
       - cmd: packer build packer/alpine
@@ -42,6 +48,8 @@ tasks:
       - cmd: terraform destroy --auto-approve
   run:
     cmds:
+      - task: mise:init
+      - task: py:init
       - task: pkr:clean
       - task: pkr:alpine
       - task: tf:apply
