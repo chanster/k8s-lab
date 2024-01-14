@@ -9,7 +9,7 @@ fqdn: ${fqdn}
 
 users:
   - name: k3s
-    system: false
+    lock_passwd: true
     sudo: ALL=(ALL) NOPASSWD:ALL
     shell: /bin/ash
     ssh_authorized_keys:
