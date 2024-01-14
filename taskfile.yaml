@@ -17,21 +17,25 @@ tasks:
     cmds:
       - cmd: terraform fmt --recursive
   tf:show:
+    aliases: [ tf:s, tfs ]
     dir: ./terraform
     cmds:
       - task: tf:init
       - cmd: terraform show
   tf:plan:
+    aliases: [ tf:p, tfp ]
     dir: ./terraform
     cmds:
       - task: tf:init
       - cmd: terraform plan
   tf:apply:
+    aliases: [ tf:a, tfa ]
     dir: ./terraform
     cmds:
       - task: tf:init
       - cmd: terraform apply --auto-approve
   tf:destroy:
+    aliases: [ tf:d, tfd ]
     dir: ./terraform
     cmds:
       - task: tf:init
